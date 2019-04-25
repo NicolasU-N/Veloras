@@ -63,7 +63,7 @@ void drive(int L, int R) // speed for wheels Left and Right, positive is forward
   digitalWrite(AIN2, L<=0);// >=
   analogWrite(PWMA, abs(L));
   
-  digitalWrite(BIN1, R>0); // Estaba <       switch < and >= if left wheel doesnt spin as expected
-  digitalWrite(BIN2, R<=0);// >=
+  digitalWrite(BIN1, R<0); // Estaba <       switch < and >= if left wheel doesnt spin as expected
+  digitalWrite(BIN2, R>=0);// >=
   analogWrite(PWMB, abs(R));
 }
