@@ -1,7 +1,10 @@
 // Source: https://github.com/NicolasU-N/raptor/blob/master/raptor_nl_pid.ino
 // Arduino Pro Micro, TB6612 driver, Pololu QTR-8 sensor
+// Adaptado por: @NicolasU-N     https://github.com/NicolasU-N 
+//               @OrlandoMurcia1 https://github.com/OrlandoMurcia1
 
-// Adaptado por: @NicolasU-N https://github.com/NicolasU-N ...
+#include <PIDfromBT.h> // Libreria para PID por Bluetooth
+
 // TB6612 driver pinout
 //const int STBY = 15; // standby
 const int PWMA = 10; // speed and direction control motor A (left)
@@ -27,7 +30,14 @@ int p,d,u,vbase;
 long i=0;
 int p_old=0;
 
+// Creación del Objeto PIDfromBT
+       PIDfromBT pid_calibrate(&kp, &ki, &kd, &vmax, DEBUG);
+
 void setup() {
+    //Inicializamos comunicaión módulo (0,1)
+    Serial.begin(9600); 
+    Serial.println("Bluetooth encendido...");
+  
     pinMode(AIN1,OUTPUT);
     pinMode(AIN2,OUTPUT);
     pinMode(PWMA,OUTPUT);
@@ -51,6 +61,9 @@ void loop()
   u=kp*p+ki*i+kd*d;
   vbase=vmin+(vmax-vmin)*exp(-kv*abs(kp*p));
   drive(vbase+u,vbase-u);
+
+  //--- Ejecutar el update() para revisar si hay instrucciones en el Buffer
+   pid_calibrate.update();
  
 }
 
