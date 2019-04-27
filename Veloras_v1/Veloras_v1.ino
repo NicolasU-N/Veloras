@@ -1,7 +1,7 @@
 // Source: https://github.com/NicolasU-N/raptor/blob/master/raptor_nl_pid.ino
 // Arduino Pro Micro, TB6612 driver, Pololu QTR-8 sensor
-// Adaptado por: @NicolasU-N https://github.com/NicolasU-N ...
 
+// Adaptado por: @NicolasU-N https://github.com/NicolasU-N ...
 // TB6612 driver pinout
 //const int STBY = 15; // standby
 const int PWMA = 10; // speed and direction control motor A (left)
@@ -17,12 +17,12 @@ QTRSensorsAnalog qtra((unsigned char[]) {7, 6, 5, 4, 3, 2,1,0}, 8,4,13);
 unsigned int IR[8];
 
 // parameters and variables for non linear PID
-const int vmin=70; //Estaba 80
-const int vmax=80; // 150
-const float kp=.015;
-const float ki=0.0003;
-const float kd=0.2;
-const float kv=0.07;
+const int vmin=80; //Estaba 80
+const int vmax=100; // 150
+const float kp=0.2;   //Estaba kp=.015
+const float ki=0.0007; //0.0003
+const float kd=0.9; // 0.2
+const float kv=0.07; //0.07
 int p,d,u,vbase;
 long i=0;
 int p_old=0;
@@ -59,8 +59,8 @@ void drive(int L, int R) // speed for wheels Left and Right, positive is forward
   L=constrain(L,-255,255); // avoid PWM overflow
   R=constrain(R,-255,255);
   
-  digitalWrite(AIN1, L>0); // Estaba <       switch < and >= if left wheel doesnt spin as expected
-  digitalWrite(AIN2, L<=0);// >=
+  digitalWrite(AIN1, L<0); // Estaba <       switch < and >= if left wheel doesnt spin as expected
+  digitalWrite(AIN2, L>=0);// >=
   analogWrite(PWMA, abs(L));
   
   digitalWrite(BIN1, R<0); // Estaba <       switch < and >= if left wheel doesnt spin as expected
